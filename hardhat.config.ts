@@ -12,6 +12,9 @@ import { config as dotenvConfig } from "dotenv";
 import { HardhatUserConfig } from "hardhat/config";
 import { NetworkUserConfig } from "hardhat/types";
 
+import "@nomiclabs/hardhat-etherscan";
+import '@openzeppelin/hardhat-upgrades';
+
 dotenvConfig({ path: resolve(__dirname, "./.env") });
 
 const chainIds = {
@@ -22,6 +25,8 @@ const chainIds = {
   mainnet: 1,
   rinkeby: 4,
   ropsten: 3,
+  heco: 128,
+  heco_testnet: 256,
 };
 
 // Ensure that we have all the environment variables we need.
@@ -71,16 +76,18 @@ const config: HardhatUserConfig = {
   },
   networks: {
     hardhat: {
-      // accounts: {
-      //   mnemonic,
-      // },
-      accounts: [`0x${privateKey}`],
+      accounts: {
+        mnemonic,
+      },
+      // accounts: [`0x${privateKey}`],
       chainId: chainIds.hardhat,
     },
     goerli: createTestnetConfig("goerli"),
     kovan: createTestnetConfig("kovan"),
     rinkeby: createTestnetConfig("rinkeby"),
     ropsten: createTestnetConfig("ropsten"),
+    heco: { accounts: [`0x${process.env.HT_PRIVATE_KEY}`], chainId: chainIds["heco"],url:"https://http-mainnet.hecochain.com",},
+    heco_testnet: { accounts: [`0x${process.env.HT_PRIVATE_KEY}`], chainId: chainIds["heco_testnet"],url:"https://http-testnet.hecochain.com",},
   },
   paths: {
     artifacts: "./artifacts",
